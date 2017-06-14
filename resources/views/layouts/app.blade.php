@@ -11,6 +11,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
+    <link href="/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
 
     <!-- Scripts -->
@@ -18,6 +20,7 @@
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
+    
     </script>
 </head>
 <body>
@@ -43,6 +46,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                        @if (Auth::check())
+                            <li><a href="{{ url('/home') }}">Dasboard</a></li>
+                        @endif
                         &nbsp;
                     </ul>
 
@@ -51,7 +57,7 @@
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ url('/login') }}">Login</a></li>
-                            <li><a href="{{ url('/register') }}">Register</a></li>
+                            <li><a href="{{ url('/register') }}">Daftar</a></li>
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -83,6 +89,8 @@
 
     <!-- Scripts -->
    <script src="/js/app.js"></script>
-    <!-- PARTIAL VIEW @include('layouts.menu'); -->
+
+   <!-- PARTIAL VIEW -->
+    <center> @include('layouts.menu'); </center>
 </body>
 </html>
