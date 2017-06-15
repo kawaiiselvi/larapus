@@ -15,7 +15,7 @@
 					</div>
 
 					<div class="panel-body">
-						{!! Form::open(['url' => route(authors.store), 'method' => 'post', 'class'=>'form-horizontal']) !!}
+						{!! Form::open(['url' => route('authors.store'), 'method' => 'post', 'class'=>'form-horizontal']) !!}
 						@include('authors._form')
 						{!! Form::close() !!}
 					</div>

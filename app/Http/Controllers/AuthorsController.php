@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Author;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
+use Session;
 
 class AuthorsController extends Controller
 {
@@ -23,12 +24,18 @@ class AuthorsController extends Controller
     public function index(Request $request, Builder $htmlBuilder){
     if ($request->ajax()){
         $authors = Author::select(['id', 'name']);
-        return Datatables::of($authors)->make(true);
+        // return Datatables::of($authors)->make(true);
+        return Datatables::of($authors)->addColumn('action', function($authors){
+            return view('datatable._action', ['edit_url'=>route('authors.edit', $authors->id),
+                ]);
+        })->make(true);
     }
 
-    $html = $htmlBuilder->addColumn(['data' => 'name', 'name'=>'name', 'title'=>'Nama']);
+    $html = $htmlBuilder->addColumn(['data'=>'name', 'name'=>'name', 'title'=>'Nama'])
+                        ->addColumn(['data'=>'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, '\searchable'=>false]);
 
     return view('authors.index')->with(compact('html'));
+ // ->addColumn(['data' => 'name', 'name'=>'name', 'title'=>'Nama']);
 
     }
 
@@ -52,8 +59,10 @@ class AuthorsController extends Controller
     public function store(Request $request)
     {
         //
-        $this->validate($request, ['name' => 'required|unique:authors']);
-        $author = Author::create($request->all());
+        $this->validate($request, ['name'=>'required|unique:authors']);
+        $authors = Author::create($request->all());
+
+        Session::flash("flash_notification", ["level"=>"succes", "message"=>"Berhasil Menyimpan $authors->name"]);
         return redirect()->route('authors.index');
     }
 
