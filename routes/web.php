@@ -20,3 +20,15 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('home', 'CocoboController@index');
+
+// Route::group(['prefix'=>'admin', 'middleware'=>['auth']], function() {
+// 	//Route diisi disini ...
+// 	Route::resource('authors', 'AuthorsController');
+// });
+Route::group(['middleware'=> 'web'], function(){
+
+Route::group(['prefix'=>'admin', 'middleware'=>['auth', 'role:admin']], function (){
+	Route::resource('authors', 'AuthorsController');
+});
+
+});
