@@ -22,17 +22,22 @@ class AuthorsController extends Controller
     // }
 
     public function index(Request $request, Builder $htmlBuilder){
-    if ($request->ajax()){
+        // Penggunaan Form Model Binding
+        if ($request->ajax()){
         $authors = Author::select(['id', 'name']);
         // return Datatables::of($authors)->make(true);
-        return Datatables::of($authors)->addColumn('action', function($authors){
-            return view('datatable._action', ['edit_url'=>route('authors.edit', $authors->id),
+        return Datatables::of($authors)->addColumn('action', function($author){
+            return view('datatable._action', ['edit_url'=>route('authors.edit', $author->id),
+                'model' => $author,
+                'form_url' => route('authors.destroy', $author->id),
+                'edit_url' => route('authors.edit', $author->id),
+                'confirm_message' => 'Yakin mau menghapus ' . $author->name . '?'
                 ]);
         })->make(true);
     }
 
     $html = $htmlBuilder->addColumn(['data'=>'name', 'name'=>'name', 'title'=>'Nama'])
-                        ->addColumn(['data'=>'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, '\searchable'=>false]);
+                        ->addColumn(['data'=>'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
 
     return view('authors.index')->with(compact('html'));
  // ->addColumn(['data' => 'name', 'name'=>'name', 'title'=>'Nama']);
@@ -86,6 +91,8 @@ class AuthorsController extends Controller
     public function edit($id)
     {
         //
+        $author = Author::find($id);
+        return view('authors.edit')->with(compact('author'));
     }
 
     /**
@@ -98,6 +105,11 @@ class AuthorsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, ['name'=>'required|unique:authors,name,'. $id]);
+        $author = Author::find($id);
+        $author->update($request->only('name'));
+        Session::flash("flash_notification", ["level"=>"succes", "message"=>"Berhasil Menyimpan $author->name"]);
+        return redirect()->route('authors.index');
     }
 
     /**
@@ -108,6 +120,11 @@ class AuthorsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // //
+        // Author::destroy($id);
+        if(!Author::destroy($id)) return redirect()->back();
+
+        Session::flash("flash_notification", ["level"=>"succes", "message"=>"Penulis Berhasil Dihapus"]);
+        return redirect()->route('authors.index');
     }
 }

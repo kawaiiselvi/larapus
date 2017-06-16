@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/jquery.dataTables.css" rel="stylesheet">
@@ -52,8 +52,9 @@
                             <li><a href="{{ url('/home') }}">Dasboard</a></li>
                             <!-- <li><a href="{{ route('authors.index') }}">Penulis</a></li> -->
                         @endif
-                         @role('admin')
+                        @role('admin')
                             <li><a href="{{ route('authors.index') }}">Penulis</a></li>
+                            <li><a href="{{ route('books.index') }}">Buku</a></li>
                         @endrole
                         &nbsp;
                     </ul>
@@ -99,6 +100,7 @@
    <script src="/js/jquery.dataTables.min.js"></script>
    <script src="/js/dataTables.bootstrap.min.js"></script>
 
+   <script src="/js/custom.js"></script>
 
    <!-- PARTIAL VIEW -->
     @yield('scripts')
