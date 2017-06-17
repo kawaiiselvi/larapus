@@ -21,28 +21,26 @@ class AuthorsController extends Controller
     //     return view('authors.index');
     // }
 
-    public function index(Request $request, Builder $htmlBuilder){
-        // Penggunaan Form Model Binding
+   public function index(Request $request, Builder $htmlBuilder)
+    {
         if ($request->ajax()){
-        $authors = Author::select(['id', 'name']);
-        // return Datatables::of($authors)->make(true);
-        return Datatables::of($authors)->addColumn('action', function($author){
-            return view('datatable._action', ['edit_url'=>route('authors.edit', $author->id),
-                'model' => $author,
-                'form_url' => route('authors.destroy', $author->id),
-                'edit_url' => route('authors.edit', $author->id),
-                'confirm_message' => 'Yakin mau menghapus ' . $author->name . '?'
-                ]);
-        })->make(true);
+            $authors = Author::select(['id','name']);
+            return Datatables::of($authors)
+            ->addColumn('action',function($author){
+                return view('datatable._action',[
+                    'model'=>$author,
+                    'form_url'=>route('authors.destroy',$author->id),
+                    'edit_url'=> route('authors.edit',$author->id),
+                    'confirm_message'=>'Yakin mau menghapus'.$author->name.'?'
+                    ]);
+            })->make(true);
+        }
+        $html = $htmlBuilder
+        ->addColumn(['data'=>'name','name'=>'name','title'=>'Nama'])
+        ->addColumn(['data'=>'action','name'=>'action','title'=>'','orderable'=>false,'searchable'=>false]);
+        return view('authors.index')->with(compact('html'));    
     }
 
-    $html = $htmlBuilder->addColumn(['data'=>'name', 'name'=>'name', 'title'=>'Nama'])
-                        ->addColumn(['data'=>'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
-
-    return view('authors.index')->with(compact('html'));
- // ->addColumn(['data' => 'name', 'name'=>'name', 'title'=>'Nama']);
-
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -88,9 +86,8 @@ class AuthorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+     public function edit($id)
     {
-        //
         $author = Author::find($id);
         return view('authors.edit')->with(compact('author'));
     }
@@ -102,29 +99,27 @@ class AuthorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
-        //
-        $this->validate($request, ['name'=>'required|unique:authors,name,'. $id]);
+        $this->validate($request,['name'=>'required|unique:authors,name,'.$id]);
         $author = Author::find($id);
         $author->update($request->only('name'));
-        Session::flash("flash_notification", ["level"=>"succes", "message"=>"Berhasil Menyimpan $author->name"]);
+        Session::flash("flash_notification",[
+            "level"=>"success",
+            "message"=>"Berhasil menyimpan $author->name"
+            ]);
         return redirect()->route('authors.index');
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+     public function destroy($id)
     {
-        // //
-        // Author::destroy($id);
         if(!Author::destroy($id)) return redirect()->back();
-
-        Session::flash("flash_notification", ["level"=>"succes", "message"=>"Penulis Berhasil Dihapus"]);
-        return redirect()->route('authors.index');
+       Session::flash("flash_notification",["level"=>"success","message"=>"Penulis berhasil dihapus"]);
+       return redirect()->route('authors.index');
     }
 }

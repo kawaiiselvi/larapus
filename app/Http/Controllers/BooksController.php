@@ -7,6 +7,7 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use App\Book;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 class BooksController extends Controller
 {
@@ -15,7 +16,7 @@ class BooksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $builder $htmlBuilder)
+    public function index(Request $request, Builder $htmlBuilder)
     {
         //
         if ($request->ajax()){
@@ -33,9 +34,9 @@ class BooksController extends Controller
             }
 
         $html = $htmlBuilder
-        ->addColumn(['data' => 'title','name'=>'title', 'title'=>'judul'])
-        ->addColumn(['data' => 'amount', 'name'=>'amount', 'title'=>'jumlah'])
-        ->addColumn(['data' => 'author.name', 'name'=>'author.name', 'title'=>'penulis'])
+        ->addColumn(['data' => 'title', 'name'=>'title', 'title'=>'Judul'])
+        ->addColumn(['data' => 'amount', 'name'=>'amount', 'title'=>'Jumlah'])
+        ->addColumn(['data' => 'author.name', 'name'=>'author.name', 'title'=>'Penulis'])
         ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'serchable'=>false]);
         return view('books.index')->with(compact('html'));
     }
@@ -57,15 +58,15 @@ class BooksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
         //
-        $this->validate($request, [
-           'title' => 'required|unique:books,title',
-           'author_id' => 'required|exists:author,id',
-           'amount' => 'required|numeric',
-           'cover' => 'image|max:2048'
-            ]);
+        // $this->validate($request, [
+        //    'title' => 'required|unique:books,title',
+        //    'author_id' => 'required|exists:authors,id',
+        //    'amount' => 'required|numeric',
+        //    'cover' => 'image|max:2048'
+        //     ]);
 
         $book = Book::create($request->except('cover'));
 
@@ -117,6 +118,8 @@ class BooksController extends Controller
     public function edit($id)
     {
         //
+        $book = Book::find($id);
+            return view('books.edit')->with(compact('book'));
     }
 
     /**
@@ -126,9 +129,45 @@ class BooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateBookRequest $request, $id)
     {
         //
+        // $this->validate($request, [
+        //     'title' => 'required|unique:books,title,' . $id,
+        //     'author_id' => 'required|exists:authors,id',
+        //     'amount' => 'required|numeric',
+        //     'cover' => 'image|max:2048'
+        //     ]);
+
+        $book = Book::find($id);
+        $book->update($request->all());
+
+         if ($request->hasFile('cover')){
+                $filename = null;
+                $uploaded_cover=$request->file('cover');
+                $extension=$uploaded_cover->getClientOriginalExtension();
+                $filename=md5(time()).'.'.$extension;
+                $destinationPath=public_path().DIRECTORY_SEPARATOR.'img';
+                $uploaded_cover->move($destinationPath,$filename);
+                if ($book->cover) {
+                    $old_cover=$book->cover;
+                    $filepath=public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$book->cover;
+                    try {
+
+                        File:delete($filepath);
+                    } catch (FileNotFoundException $e){
+                        //file sudah dihapus/tidak ada
+
+                    }
+                }
+                $book->cover=$filename;
+                $book->save();
+            }
+            Session::flash("flash_notification",[
+                "level"=>"success",
+                "message"=>"Berhasil menyimpan $book->title"
+                ]);
+            return redirect()->route('books.index');
     }
 
     /**
@@ -140,5 +179,23 @@ class BooksController extends Controller
     public function destroy($id)
     {
         //
+         $book=Book::find($id);
+
+         //hapus cover lama jika ada
+        if($book->cover){
+            $old_cover=$book->cover;
+            $filepath=public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$book->cover;
+            try{
+                File::delete($filepath);
+            } catch (FileNotFoundException $e){
+                //file sudah dihapus tidak ada
+
+            }
+        }
+        $book->delete();
+        Session::flash("flash_notification",[
+            "level"=>"success",
+            "message"=>"Buku berhasil dihapus"]);
+        return redirect()->route('books.index');
     }
 }
