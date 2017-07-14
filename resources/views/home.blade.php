@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Dashboard</div>
 
-                <div class="panel-body">
+                <div class="panel-body"> 
                     Anda Berhasil Login!
                 </div>
             </div>
@@ -15,3 +15,4 @@
     </div>
 </div>
 @endsection
+                                                                                                                                                                                                                                                                                                                                                             

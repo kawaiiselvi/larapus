@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link href="css/font-awesome.min.css/" rel="stylesheet" type='text/css'>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ asset('css/app.css') }}" rel='sylesheet' type='text/css'>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,18 +15,17 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/jquery.dataTables.css" rel="stylesheet">
     <link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/css/selectize.css" rel="stylesheet">
+    <link href="/css/selectize.bootstrap3.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
-    
     </script>
 </head>
 <body>
@@ -48,15 +51,13 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        @if (Auth::check())
-                            <li><a href="{{ url('/home') }}">Dasboard</a></li>
-                            <!-- <li><a href="{{ route('authors.index') }}">Penulis</a></li> -->
+                        @if (Auth::check() )
+                        <li><a href="{{url('/home') }}">Dashboard</a></li>
                         @endif
                         @role('admin')
-                            <li><a href="{{ route('authors.index') }}">Penulis</a></li>
-                            <li><a href="{{ route('books.index') }}">Buku</a></li>
+                        <li><a href="{{ route('authors.index') }}">Penulis</a></li>
+                        <li><a href="{{ route('books.index') }}">Buku</a></li>
                         @endrole
-                        &nbsp;
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -90,20 +91,20 @@
                 </div>
             </div>
         </nav>
-
         @include('layouts._flash')
         @yield('content')
     </div>
 
     <!-- Scripts -->
-   <script src="/js/app.js"></script>
-   <script src="/js/jquery.dataTables.min.js"></script>
-   <script src="/js/dataTables.bootstrap.min.js"></script>
-
-   <script src="/js/custom.js"></script>
-
-   <!-- PARTIAL VIEW -->
+    <script src="/js/app.js"></script>
+    @include ('layouts.menu')
+    <script src=".js/jquery-3.1.0.min.js"></script>
+    <script src=".js/bootstrap.min.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script>
+    <script src="/js/dataTables.bootstrap.min.js"></script>
+     <script src="/js/custom.js"></script>
+     <script src="/js/selectize.min.js"></script>
     @yield('scripts')
-    <center> @include('layouts.menu'); </center>
+    
 </body>
 </html>

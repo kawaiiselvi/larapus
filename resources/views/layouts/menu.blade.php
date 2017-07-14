@@ -1,1 +1,1 @@
-<h1> Annyeong Haseo!^^ </h1>
+<center><h1>Annyeong haseo!^^</h1></center>

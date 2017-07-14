@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Role;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use App\Role;
 
 class RegisterController extends Controller
 {
@@ -20,7 +20,6 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
-
 
     use RegistersUsers;
 
@@ -52,7 +51,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|confirmed|min:6',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
     }
 
@@ -64,13 +64,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => bcrypt($data['password']),
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
-        $memberRole = Role::where('name', 'member')->first();
+        $memberRole = Role::where('name','member')->first();
         $user->attachRole($memberRole);
         return $user;
-    }
+            }
 }

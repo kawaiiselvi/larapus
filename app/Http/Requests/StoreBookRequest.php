@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreBookRequest extends FormRequest
 {
@@ -24,11 +25,10 @@ class StoreBookRequest extends FormRequest
     public function rules()
     {
         return [
-        'title' => 'required|unique:books,title',
-        'author_id' => 'required|exists:authors,id',
-        'amount' => 'numeric',
-        'cover' => 'image|max:2048'
-            //
+            'title'=>'required|unique:books,title',
+            'author_id'=>'required|exists:authors,id',
+            'amount'=>'required|numeric',
+            'cover'=>'image|max:2048'
         ];
     }
 }

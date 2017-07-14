@@ -1,4 +1,4 @@
- <?php
+<?php
 
 return [
 
@@ -162,13 +162,17 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+
+
+
 
         /*
          * Package Service Providers...
          */
-        Collective\Html\HtmlServiceProvider::class,
-
-        Laratrust\LaratrustServiceProvider::class,
+            Collective\Html\HtmlServiceProvider::class,
+            Laratrust\LaratrustServiceProvider::class,
+            Yajra\Datatables\DatatablesServiceProvider::class,
         //
 
         /*
@@ -180,7 +184,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*
@@ -229,7 +232,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-
         'Laratrust' => Laratrust\LaratrustFacade::class,
 
     ],
