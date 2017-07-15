@@ -57,7 +57,11 @@
                         @role('admin')
                         <li><a href="{{ route('authors.index') }}">Penulis</a></li>
                         <li><a href="{{ route('books.index') }}">Buku</a></li>
+                        <li><a href="{{ route('members.index') }}">Member</a></li>
                         @endrole
+                        @if (auth()->check())
+                            <li><a href="{{ url('/settings/profile') }}">Profile</a></li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -73,6 +77,8 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/settings/password') }}"><i class="fa fa-btn fa-lock"></i>Ubah Password</a></li>
+
                                     <li>
                                         <a href="{{ url('/logout') }}"
                                             onclick="event.preventDefault();

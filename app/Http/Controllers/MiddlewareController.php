@@ -14,7 +14,7 @@ class MiddlewareController extends Controller
 
     public function iya ()
     {
-    $a= "Vela";
+    $a= "Selvi";
     return "Nama Saya :".$a;
 	}
 
