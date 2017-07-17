@@ -81,5 +81,25 @@ class MembersController extends Controller
 	return redirect()->route('members.index');
 	}
 
+	public function show($id)
+	{
+		$member = User::find($id);
+		return view('members.show', compact('member'));
+	}
+
+	public function destroy($id)
+	{
+		$member = User::find($id);
+
+		if ($member->hasRole('member')) {
+			$member->delete();
+			Session::flash("flash_notification", [
+				"level"=>"succes",
+				"message"=>"Member berhasil dihapus"
+			]);
+		}
+		return redirect()->route('members.index');
+	}
+
 
 }
