@@ -27,6 +27,15 @@
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
+
+    <style>
+        body {
+            background-image:url({{ asset ('Lighthouse.jpg') }});
+            background-repeat:no-repeat;
+            background-size: cover;
+            background-attachment:fixed;
+        }
+    </style>
 </head>
 <body>
     <div id="app">

@@ -49,6 +49,7 @@ Route::get('auth/send-verification', 'Auth\RegisterController@sendVerification')
 
 Route::get('settings/profile', 'SettingsController@profile');
 Route::post('settings/profile', 'SettingsController@updateProfile');
+Route::get('settings/profile/edit','SettingsController@editProfile');
 
 Route::get('settings/password', 'SettingsController@editPassword');
 Route::post('settings/password', 'SettingsController@updatePassword');

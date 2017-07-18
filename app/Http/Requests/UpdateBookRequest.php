@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-
+use Illuminate\Foundation\Http\Requests;
 
 class UpdateBookRequest extends StoreBookRequest
 {
